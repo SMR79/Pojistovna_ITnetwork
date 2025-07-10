@@ -1,0 +1,102 @@
+{% extends "main.html" %}
+{% block content %}
+
+<div>
+    {% if user.is_authenticated %}
+        <h3>Registr pojištěnců</h3>    
+        {% if page_obj %}            
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Jméno</th>
+                        <th>Příjmení</th>
+                        <th>Email</th>
+                        <th>Telefon</th>
+                        <th>Počet pojištění</th>
+                        <th>Registrace uživatele</th>
+                        <th>Akce</th>
+                    </tr>
+                </thead>
+                <tbody id="insuredTableBody">
+                    {% include "pojistovna/insured_person_table_rows.html" %}
+                </tbody>
+            </table>            
+        {% else %}
+            <p>Žádní pojištěnci nejsou evidováni.</p>
+        {% endif %}
+    {% else %}
+        <h2>🧑‍🤝‍🧑 Pojištěnci</h2>
+        <p>Pojištěnec je fyzická osoba, která je zaregistrována v systému a může využívat pojišťovacích služeb. V této sekci naleznete seznam všech evidovaných pojištěnců spolu s jejich osobními údaji, jako je jméno, adresa, datum narození nebo kontakt.</p>
+        <p>Každému pojištěnci lze přiřadit jedno či více pojištění podle jeho potřeb a životní situace. Systém umožňuje snadnou správu údajů, přehledné zobrazení historie pojistných událostí a propojení s aktivními pojistnými smlouvami.</p>
+        <p>Tato sekce je klíčová pro správu databáze klientů a sledování jejich pojišťovacího vztahu s institucí.</p>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+
+{% block sidebar %}
+    <ul>
+        <li class="dropdown">
+            <a id="dropdownSearch" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-search fs-3"></i>
+            </a>
+            <ul class="dropdown-menu p-3" style="min-width: 250px; left: 0 !important;">
+                <input type="text" class="form-control" id="searchSurname" name="surname" placeholder="Příjmení">
+                <input type="text" class="form-control mb-2" id="searchName" name="name" placeholder="Jméno">                
+            </ul>
+        </li>
+
+        <li><a href="{% url 'pojistovna:insured_person_form' %}" class="btn btn-outline-secondary" title="Přidat pojištěnce"><i class="bi bi-person-fill-add fs-3"></i></a></li>
+        <li><a href="{% url 'pojistovna:home' %}" class="btn btn-outline-secondary" title="Zpět domů"><i class="bi bi-arrow-left fs-3"></i></a></li>
+    </ul>
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const nameInput = document.getElementById("searchName");
+    const surnameInput = document.getElementById("searchSurname");
+    const tbody = document.getElementById("insuredTableBody");
+
+    let debounceTimer = null;
+
+    function updateResults(name, surname, page = 1) {
+        const query = `name=${encodeURIComponent(name)}&surname=${encodeURIComponent(surname)}&page=${page}`;
+
+        fetch(`/insured_person/search/?${query}`)
+            .then(response => response.text())
+            .then(html => {
+                tbody.innerHTML = html;
+            });
+    }
+
+    function onInputChange() {
+        const name = nameInput.value.trim();
+        const surname = surnameInput.value.trim();
+
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => updateResults(name, surname), 300);  // debounce 300ms
+    }
+
+    nameInput.addEventListener("input", onInputChange);
+    surnameInput.addEventListener("input", onInputChange);
+
+    // Dynamická paginace se zachováním hodnot vstupů
+    document.addEventListener("click", function (e) {
+        if (e.target.matches(".page-link")) {
+            e.preventDefault();
+
+            const link = new URL(e.target.href, window.location.origin);
+            const page = link.searchParams.get("page") || 1;
+            const name = nameInput.value.trim();
+            const surname = surnameInput.value.trim();
+
+            updateResults(name, surname, page);
+        }
+    });
+});
+</script>
+{% endblock %}

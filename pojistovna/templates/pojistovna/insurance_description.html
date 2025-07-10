@@ -1,0 +1,23 @@
+{% extends "insurance.html" %}
+{% block content %}
+
+<div>
+    <h2>Popois pojištění</h2>
+    
+   
+    {% if insurance_types %}
+        <p>Aktuálně registrováno druhů pojištění: {{ insurance_types|length }}</p>
+        <br>
+    {% else %}
+        <p>V současné době nejsou registrovány žádné druhy pojištění.</p>
+    {% endif %}
+    <ul class="insurance-types">
+        
+        {% for values, label in insurance_types %}
+            <li><a href="{% url 'pojistovna:insurance_description' %}">{{ label }}</a></li>
+        {% endfor %}
+    </ul>        
+       
+</div>
+
+{% endblock %}

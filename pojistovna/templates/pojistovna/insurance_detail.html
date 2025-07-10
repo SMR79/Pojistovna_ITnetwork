@@ -1,0 +1,81 @@
+{% extends "main.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h3>Detail pojištění č. {{ insurance.insurance_number }}</h3>
+    <table class="table table-striped">
+        <tr>
+            <th>Pojištěnec:</th>
+            <td>{{ insurance.insured_person.name }} {{ insurance.insured_person.surname }}</td>
+        </tr>
+        <tr>
+            <th>Typ pojištění:</th>
+            <td>{{ insurance.insurance_type.insurance_name }}</td>
+        </tr>
+        <tr>
+            <th>Předmět pojištění:</th>
+            <td>{{ insurance.insurance_subject }}</td>
+        </tr>
+        <tr>
+            <th>Cena pojištění:</th>
+            <td>{{ insurance.insurance_price }} Kč</td>
+        </tr>
+        <tr>
+            <th>Datum zahájení:</th>
+            <td>{{ insurance.start_date }}</td>
+        </tr>
+        {% if insurance.end_date %}
+        <tr>
+            <th>Datum ukončení:</th>
+            <td>{{ insurance.end_date }}</td>
+        </tr>
+        {% endif %}
+        <tr>
+            <th>Aktivní:</th>
+            <td>{{ insurance.is_active|yesno:"Ano,Ne" }}</td>
+        </tr>
+    </table>
+
+    <h4>Události k tomuto pojištění</h4>
+    {% if events %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID události</th>
+                    <th>Datum události</th>
+                    <th>Datum nahlášení</th>                    
+                    <th>Škoda (Kč)</th>
+                    <th>Vyplaceno (Kč)</th>
+                    <th>Schváleno</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in events %}
+                <tr>
+                    <td>{{ event.id }}</td>
+                    <td>{{ event.event_date|date:"d.m.Y H:i" }}</td>
+                    <td>{{ event.report_date|date:"d.m.Y H:i" }}</td>
+                    <td>{{ event.damage_amount }}</td>
+                    <td>{{ event.payment_amount }}</td>
+                    <td>{{ event.is_approved|yesno:"Ano,Ne" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Žádné události zatím nejsou evidovány.</p>
+    {% endif %}    
+</div>
+{% endblock %}
+
+
+{% block sidebar %}
+    <ul class="sidebar-menu">
+        <li>
+            <li><a href="{% url 'pojistovna:edit_insurance' insurance.id %}" class="btn btn-outline-secondary fs-3" title="Upravit pojištění"><i class="bi bi-pencil"></i></a></li>
+            <a href="{% url 'pojistovna:insured_person_detail' insurance.insured_person.id %}" class="btn btn-outline-secondary" title="Zpět na pojištěnce">
+                <i class="bi bi-arrow-left fs-3"></i>
+            </a>
+        </li>
+    </ul>
+{% endblock %} 

@@ -1,0 +1,164 @@
+@font-face {
+    font-family: 'Nunito';
+    src: url('/static/font/Nunito/Nunito-Regular.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+html, body {
+    height: 50%;
+    margin: 0;
+    padding: 0;
+    background-image: url("/static/images/main_bg.jpg");    
+    background-size: cover; /* Zajištění, že obrázek pokryje celé pozadí */
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+body {       
+    font-family: 'Nunito', sans-serif; /* Použití Nunito jako výchozího písma */        
+}
+
+
+.page-header {     
+    position: fixed;
+    background-image: url("/static/images/header_bg.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center -100px; /* nebo jiná vhodná hodnota */
+    top: 0;    
+    color: rgb(197, 35, 35);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;    
+    align-items: center;    
+    gap: 50px;
+    height: 120px;
+    max-height: 120px; /* maximální výška pro desktop */
+    min-width: 800px; /* minimální šířka pro desktop */
+    width: 100%;
+    white-space: nowrap;
+    z-index: 1000; /* pro jistotu, ať je nad obsahem */
+}
+
+.page-header a {   
+    color: #98ff98; /* barva odkazu */ 
+    text-decoration: none; /* odstraní podtržení, pokud chceš */
+    font-weight: bold;      /* tučné písmo pro odkazy */
+    padding: 5px;
+}
+
+.page-header .menu a { 
+    color: #98ff98;          /* barva odkazu */        
+    font-size: 1.2rem; /* velikost písma */
+    transition: all 0.5s ease; /* plynulý přechod při hover efektu */
+    padding: 10px 15px; /* vnitřní odsazení pro odkazy */
+    border-radius: 10px; /* zaoblení rohů */
+}
+.page-header .menu a:hover { 
+    border-radius: 5px; /* zaoblení rohů */
+    box-shadow: inset 0 0 0 2px #ffd700; /* 3px „rámeček“ směrem dovnitř */     
+    background-color: rgba(136, 69, 175, 0.4); /* poloprůhledné pozadí */
+    
+}
+
+.page-header #logo {  
+    margin-left: 50px; /* odsazení zleva */
+    border: #ffd700 solid 2px; /* zlatý rámeček */ 
+    background-color: rgba(98, 50, 126, 0.5);
+    padding: 10px 15px;            /* vnitřní odsazení */
+    border-radius: 20px;     /* zaoblení rohů */
+    width: 300px;
+    text-align: center;
+}
+
+.page-header #logo h1, #logo p{ 
+    color: #98ff98;  
+    margin: 0;        /* odstraní výchozí okraje */    
+    text-shadow: 2px 2px 4px #643e3e;
+    white-space: nowrap; /* zabrání zalamování textu */
+    letter-spacing: 3px;
+}
+
+.page-header #logo h1 {       
+    font-size: 2rem; /* velikost nadpisu */     
+}
+
+.page-header #logo p { 
+    letter-spacing: 1px;
+    text-align: center;    
+}
+
+.page-header .login a { 
+    color: #98ff98;     
+    padding: 10px 15px; /* vnitřní odsazení pro odkazy */
+    transition: all 0.5s ease; /* plynulý přechod při hover efektu */
+}
+.page-header .login a:hover { 
+    border-radius: 5px; /* zaoblení rohů */
+    box-shadow: inset 0 0 0 2px #ffd700; /* 3px „rámeček“ směrem dovnitř */     
+    background-color: rgba(136, 69, 175, 0.4); /* poloprůhledné pozadí */
+    
+}
+
+@media (max-width: 768px) {   
+  .page-header { height: 250px; }
+  .page-header h1 { font-size: 1.5rem; }
+}
+
+.menu {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 20px;
+    list-style-type: none;
+}
+
+.page-content {
+    color: rgb(0, 0, 0);
+    max-width: 800px; /* maximální šířka obsahu */
+    margin-top: 140px; /* odsazení pro header */
+    margin-bottom: 20px; /* odsazení pro footer */    
+    margin-left: auto;
+    margin-right: auto; 
+    padding: 40px; /* vnitřní odsazení obsahu */  
+    min-height: 50vh; /* Zajištění minimální výšky obsahu */    
+    background-color: rgba(255, 255, 255, 0.8); /* poloprůhledné pozadí pro lepší čitelnost */
+    box-shadow: 2px 4px 8px rgba(0,0,0,0.1); /* jemný stín pro zvýraznění obsahu */
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    border-radius: 15px; /* zaoblení rohů obsahu */    
+    flex: 1; /* zabere dostupnou výšku mezi headerem a footerem */  
+
+}
+
+.page-content table {
+  overflow-x: auto;
+  max-width: 100%;
+  border-collapse: collapse; /* sloučí okraje buněk */
+  margin: 20px auto;
+
+}
+
+.page-content th,
+.page-content td {
+  border: 1px solid #aaa;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.page-content th {
+  background-color: #f0f0f0;
+  font-weight: bold;
+}
+
+footer {
+    background-color: rgba(83, 44, 105, 0.603); /* poloprůhledné pozadí */
+    color: #98ff98; /* barva textu */
+    text-align: center;
+    padding: 20px;
+    font-size: 0.9rem; /* menší velikost písma pro footer */
+    box-shadow: 0 -2px 4px rgba(0,0,0,0.1); /* jemný stín pro zvýraznění footeru */
+    position: relative;    
+    width: 100%;    
+}
+

@@ -1,0 +1,101 @@
+{% extends "main.html" %}
+{% block content %}
+
+<div>
+    <h2>Detail pojištěnce:</h2>
+    {% if insured_person %}
+        <article class="detail">
+            <p><strong>ID:</strong> {{ insured_person.id }} - 
+                {% if insured_person.user %}
+                    Pojištěnec má aktivní účet
+                {% else %}
+                    Pojištěnec nemá aktivní účet
+                {% endif %} 
+            </p>
+            <p><strong>Jméno:</strong> {{ insured_person.name }}</p>
+            <p><strong>Příjmení:</strong> {{ insured_person.surname }}</p>
+            <p><strong>Datum narození:</strong> {{ insured_person.date_of_birth }}</p>
+            <p><strong>Rodné číslo</strong>: {{ insured_person.birth_certificate_number }}</p>
+            <p><strong>Adresa:</strong> {{ insured_person.address }}</p>
+            <p><strong>Email:</strong> {{ insured_person.email }}</p>
+            <p><strong>Telefon:</strong> {{ insured_person.telephone_number }}</p> <br>       
+
+            <table class="table table-striped">
+                <tr>
+                    <th>Typ pojištění</th>
+                    <th>Číslo pojištění</th>
+                    <th>Předmět pojištění</th>
+                    <th>Cena</th>
+                    <th>Datum registrace</th>
+                    <th>Stav pojištění</th>                    
+                    <th>Akce</th>
+                </tr>
+                {% for insurance in insurances %}
+                <tr>
+                    <td>{{ insurance.insurance_type }}</td>
+                    <td>{{ insurance.insurance_number }}</td>
+                    <td>{{ insurance.insurance_subject}}</td>
+                    <td>{{ insurance.insurance_price}}</td>
+                    <td>{{ insurance.start_date }}</td>
+                    <td>
+                        {% if insurance.is_active %}
+                            Aktivní
+                        {% else %}
+                            Neaktivní
+                        {% endif %}
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-info btn-sm" onclick="window.location.href='{% url 'pojistovna:insurance_detail' insurance.id %}'">Detail</button>            
+
+                        <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ insurance.id }}">
+                            Smazat
+                        </button>  
+                        
+                        <!-- Modal -->
+                        <div class="modal fade" id="deleteModal{{ insurance.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ insurance.id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="deleteModalLabel{{ one_insured_person.id }}">Potvrzení smazání</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavřít"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Opravdu chcete smazat pojištění <strong>{{ insurance }}</strong>?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zrušit</button>
+                                        <form method="post" action="{% url 'pojistovna:insurance_delete' insurance.id %}">
+                                            {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger">Smazat</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>       
+                        
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" style="color: brown;">Pojištěnec nemá aktuálně registrováno žádné pojištění!</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </article> <br>
+    {% else %}
+        <p>Pojištěnec nebyl nalezen.</p>
+    {% endif %}
+
+</div>
+{% endblock %}
+
+{% block sidebar %}
+    <ul class="sidebar-menu">
+        {% if not insured_person.user %}
+            <li><a href="{% url 'pojistovna:register' insured_person.id %}" class="btn btn-outline-secondary" title="Dokončit registraci"><i class="bi bi-check-circle fs-3"></i></a></li>
+        {% endif %}
+        <li><a href="{% url 'pojistovna:edit_insured_person' insured_person.id %}" class="btn btn-outline-secondary fs-3" title="Upravit pojištěnce"><i class="bi bi-pencil"></i></a></li>
+        <li><a href="{% url 'pojistovna:assign_insurance' insured_person.id %}" class="btn btn-outline-secondary fs-3" title="Přiřadit uživateli pojištění"><i class="bi bi-person-lines-fill"></i></a></li>
+        <li><a href="{% url 'pojistovna:insured_person' %}" class="btn btn-outline-secondary" title="Zpět"><i class="bi bi-arrow-left fs-3"></i></a></li>
+    </ul>
+{% endblock %} 

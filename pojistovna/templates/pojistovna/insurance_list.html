@@ -1,0 +1,68 @@
+{% extends "main.html" %}
+{% block content %}
+
+<div class="insurance-container">
+    <h3>📋 Pojištění</h3>
+    <p>Pojištění je smluvní nástroj, který slouží k ochraně pojištěnce před finančními dopady nepředvídatelných událostí, jako jsou úrazy, nemoci nebo škody na majetku.</p>
+    <p>V této části aplikace jsou k dispozici různé typy pojištění – například životní, úrazové, majetkové nebo cestovní. U každého pojištění je uveden jeho název, popis, podmínky a možnost jeho aktivace. Pojištění může být přiřazeno jednomu nebo více pojištěncům, přičemž systém automaticky kontroluje, zda je pojištění aktivní.</p>
+    <p>Správa pojištění umožňuje přehlednou organizaci nabídky služeb a snadné přiřazování pojištění konkrétním klientům.</p>
+    <h4>Dostupné druhy pojištění</h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>#</th>                
+                <th>Typ pojištění</th>
+                <th>Popis</th>
+                <th>Stav</th>
+                {% if user.is_superuser %}
+                    <th>Akce</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for insurance in available_insurances %}
+            <tr>                
+                <td>{{ forloop.counter }}</td>                
+                <td>{{ insurance.insurance_name }}</td>
+                <td>{{ insurance.insurance_description }}</td>                
+                <td>
+                    {% if insurance.is_active %}
+                        Aktivní
+                    {% else %}
+                        Neaktivní
+                    {% endif %}
+                </td>
+                {% if user.is_superuser %}
+                    <td>
+                        {% if insurance.is_active %}                           
+                            <form method="post" action="{% url 'pojistovna:deactivate_insurance' insurance.id%}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-secondary">Deaktivovat</button>
+                            </form>
+                        {% else %}                            
+                            <form method="post" action="{% url 'pojistovna:activate_insurance' insurance.id%}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-success">Aktivovat</button>
+                            </form>
+                        {% endif %}                    
+                    </td>
+                {% endif %}                
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3">Žádné pojištění není k dispozici.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
+
+
+{% block sidebar %}
+    <ul>        
+        <li><a href="{% url 'pojistovna:add_insurance' %}" class="btn btn-outline-secondary" title="Přidat nové pojištění"><i class="bi bi-plus-circle fs-3"></i></a></li>
+        <li><a href="{% url 'pojistovna:home' %}" class="btn btn-outline-secondary" title="Zpět"><i class="bi bi-arrow-left fs-3"></i></a></li>
+    </ul>
+{% endblock %}

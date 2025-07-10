@@ -1,0 +1,26 @@
+{% extends "main.html" %}
+{% block content %}
+<div>
+    <h2>Registrace - {{ insured_person.name }} {{ insured_person.surname }}</h2>
+    <form method="post" id="form-user-register">
+        {% csrf_token %}
+        {{ form.as_p }}        
+    </form>
+</div>
+
+{% endblock %}
+
+{% block sidebar %}
+<ul>
+    <li>
+        <a href="#" class="btn btn-outline-secondary" onclick="event.preventDefault(); document.getElementById('form-user-register').submit();" title="Provést registraci">
+            <i class="bi bi-save fs-3"></i>
+        </a>
+    </li>
+    <li>
+        <a href="{% url 'pojistovna:insured_person' %}" class="btn btn-outline-secondary" title="Zpět na seznam pojištěnců">
+            <i class="bi bi-arrow-left fs-3"></i>
+        </a>
+    </li>
+</ul>
+{% endblock %}

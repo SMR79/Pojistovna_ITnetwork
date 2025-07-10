@@ -1,0 +1,33 @@
+{% extends 'main.html' %}
+{% block content %}
+<div>
+    <h2>Přiřadit pojištění pro {{ insured_person.name }} {{ insured_person.surname }}</h2>
+
+    <form id="form-assign-insurance" method="post">
+        {% csrf_token %}
+        <p>Vyberte pojištění:
+        <select name="insurance_type" required>
+            {% for insurance in active_insurances %}
+                <option value="{{ insurance.id }}">{{ insurance.insurance_name }}</option>
+            {% endfor %}
+        </select></p>
+        <p>Předmět pojištění: <input type="text" name="insurance_subject" required></p>
+        <p>Cena pojištění: <input type="number" name="insurance_price" step="1" min="0" required></p>
+    </form>    
+</div>
+{% endblock %}
+
+{% block sidebar %}
+<ul>
+    <li>
+        <a href="#" class="btn btn-outline-secondary" onclick="event.preventDefault(); document.getElementById('form-assign-insurance').submit();" title="Uložit">
+            <i class="bi bi-save fs-3"></i>
+        </a>
+    </li>
+    <li>
+        <a href="javascript:history.back()" class="btn btn-outline-secondary" title="Zpět">
+            <i class="bi bi-arrow-left fs-3"></i>
+        </a>
+    </li>
+</ul>
+{% endblock %}

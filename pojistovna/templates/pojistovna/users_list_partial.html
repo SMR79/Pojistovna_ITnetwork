@@ -1,0 +1,60 @@
+
+{% for user in page_obj %}
+        <tr>
+        <td>{{ user.id }}</td>
+        <td>{{ user.name }}</td>
+        <td>{{ user.surname }}</td>
+        <td>{{ user.email }}</td>
+        <td>
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#resetPasswordModal{{ user.id }}">
+                Reset hesla
+            </button>
+            <div class="modal fade" id="resetPasswordModal{{ user.id }}" tabindex="-1" aria-labelledby="resetPasswordModalLabel{{ user.id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form method="post" action="{% url 'pojistovna:user_password_reset' user.id %}">
+                            {% csrf_token %}
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="resetPasswordModalLabel{{ user.id }}">Reset hesla pro {{ user.name }} {{ user.surname }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavřít"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="new_password_{{ user.id }}">Nové heslo:</label>
+                                    <input type="password" class="form-control" id="new_password_{{ user.id }}" name="new_password" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zrušit</button>
+                                <button type="submit" class="btn btn-primary">Nastavit heslo</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ user.id }}">Smazat účet</button>
+            <!-- Modal -->
+            <div class="modal fade" id="deleteModal{{ user.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ user.id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel{{ user.id }}">Potvrzení smazání</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavřít"></button>
+                        </div>
+                        <div class="modal-body">
+                            Opravdu chcete smazat uživatele <strong>{{ user.name }} {{ user.surname }}</strong>?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zrušit</button>
+                            <form method="post" action="{% url 'pojistovna:user_delete' user.id %}">
+                                {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Smazat</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </td>
+    </tr>
+{% endfor %}

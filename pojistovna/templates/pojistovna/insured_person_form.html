@@ -1,0 +1,44 @@
+{% extends 'main.html' %}
+{% block content %}
+<div>
+    <h2>Formulář pojištěnce</h2>
+
+    <form id="formular-registrace" method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        
+        {% if form.instance.id %}
+            <input type="hidden" name="id" value="{{ form.instance.id }}">
+        {% endif %}        
+    </form>
+
+    {% if error_message %}
+        <p style="color: red;">{{ error_message }}</p>
+    {% endif %}
+    {% if success_message %}
+        <p style="color: green;">{{ success_message }}</p>
+    {% endif %}
+    {% if form.errors %}
+        <ul style="color: red;">
+            {% for field, errors in form.errors.items %}
+                <li>{{ field }}: {{ errors|join:", " }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block sidebar %}
+<ul>
+    <li>
+        <a href="#" class="btn btn-outline-secondary" onclick="event.preventDefault(); document.getElementById('formular-registrace').submit();" title="Uložit">
+            <i class="bi bi-save fs-3"></i>
+        </a>
+    </li>
+    <li>
+        <a href="javascript:history.back()" class="btn btn-outline-secondary" title="Zpět">
+            <i class="bi bi-arrow-left fs-3"></i>
+        </a>
+    </li>
+</ul>
+{% endblock %}

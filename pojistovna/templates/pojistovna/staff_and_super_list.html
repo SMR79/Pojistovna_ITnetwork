@@ -1,0 +1,38 @@
+{% extends "main.html" %}
+{% block content %}
+
+<div>
+    
+    {% if user.is_superuser or user.is_staff %}    
+        <h3>Seznam staff & super uživatelů</h3>
+        {% if page_obj %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Role/pozice</th>
+                        <th>Jméno</th>
+                        <th>Příjmení</th>
+                        <th>Email</th>
+                        <th>Akce</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% include "pojistovna/staff_and_super_list_partial.html" %}                    
+                </tbody>
+            </table>
+        {% else %}
+            <p>Žádní staff ani super uživatelé nejsou evidováni.</p>
+        {% endif %}
+    {% endif %}
+    
+</div>
+
+{% endblock %}
+
+{% block sidebar %}
+    <ul> 
+        <li><a href="{% url 'pojistovna:add_super_user' %}" class="btn btn-outline-secondary" title="Přidat administrátora"><h4>+</h4><i class="bi bi-person-badge-fill fs-3"></i></a></li>
+        <li><a href="{% url 'pojistovna:add_staff_user' %}" class="btn btn-outline-secondary" title="Přidat operátora"><h4>+</h4><i class="bi bi-person-badge fs-3"></i></a></li>
+        <li><a href="{% url 'pojistovna:home' %}" class="btn btn-outline-secondary" title="Zpět domů"><i class="bi bi-arrow-left fs-3"></i></a></li>
+    </ul>
+{% endblock %}

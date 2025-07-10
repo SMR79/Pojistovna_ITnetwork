@@ -1,0 +1,38 @@
+{% extends "main.html" %}
+{% block content %}
+
+<div class="event-container">
+    <h3>Seznam události</h3>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Číslo události</th>
+                <th>Datum události</th>                
+                <th>Typ pojištění a jeho předmět</th>
+                <th>Jméno a příjmění pojištěnce</th>                
+                {% if user.is_superuser %}
+                    <th>Akce</th>
+                {% endif %}
+            </tr>
+        </thead>
+            {% include "pojistovna/event_list_partial.html" %}       
+    </table>
+
+    <div id="paginationContainer">
+        {% include "pojistovna/pagination.html" %}
+    </div>
+</div>
+
+{% endblock %}
+
+
+
+{% block sidebar %}
+    <ul>        
+        <li><a href="{% url 'pojistovna:add_event' %}" class="btn btn-outline-secondary" title="Přidat novou událost"><i class="bi bi-plus-circle fs-3"></i></a></li>
+        <li><a href="{% url 'pojistovna:home' %}" class="btn btn-outline-secondary" title="Zpět domů"><i class="bi bi-arrow-left fs-3"></i></a></li>
+    </ul>
+{% endblock %}
+
+

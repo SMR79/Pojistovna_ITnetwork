@@ -1,0 +1,15 @@
+{% extends "main.html" %}
+{% block content %}
+<div>
+    <h2>Přihlášení</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Přihlásit se</button>
+    </form>
+    {% if error_message %}
+        <p style="color: red;">{{ error_message }}</p>
+    {% endif %}
+</div>
+
+{% endblock %}

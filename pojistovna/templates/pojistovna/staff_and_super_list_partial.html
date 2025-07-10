@@ -1,0 +1,66 @@
+
+{% for staff_superuser in page_obj %}
+        <tr>
+        <td>
+            {% if staff_superuser.is_superuser %}
+               administrátor
+            {% else %}
+               operátor
+            {% endif %}
+        </td>
+        <td>{{ staff_superuser.first_name }}</td>
+        <td>{{ staff_superuser.last_name }}</td>
+        <td>{{ staff_superuser.email }}</td>
+        <td>
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#resetPasswordModal{{ staff_superuser.id }}">
+                Reset hesla
+            </button>
+            <div class="modal fade" id="resetPasswordModal{{ staff_superuser.id }}" tabindex="-1" aria-labelledby="resetPasswordModalLabel{{ staff_superuser.id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form method="post" action="{% url 'pojistovna:user_password_reset' staff_superuser.id %}">
+                            {% csrf_token %}
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="resetPasswordModalLabel{{ staff_superuser.id }}">Reset hesla pro {{ staff_superuser.first_name }} {{ staff_superuser.last_name }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavřít"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="new_password_{{ staff_superuser.id }}">Nové heslo:</label>
+                                    <input type="password" class="form-control" id="new_password_{{ staff_superuser.id }}" name="new_password" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zrušit</button>
+                                <button type="submit" class="btn btn-primary">Nastavit heslo</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ staff_superuser.id }}">Smazat účet</button>
+            <!-- Modal -->
+            <div class="modal fade" id="deleteModal{{ staff_superuser.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ staff_superuser.id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel{{ staff_superuser.id }}">Potvrzení smazání</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavřít"></button>
+                        </div>
+                        <div class="modal-body">
+                            Opravdu chcete smazat uživatele <strong>{{ staff_superuser.first_name }} {{ staff_superuser.last_name }}</strong> ?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zrušit</button>
+                            <form method="post" action="{% url 'pojistovna:user_delete' staff_superuser.id %}">
+                                {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Smazat</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </td>
+    </tr>
+{% endfor %}

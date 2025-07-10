@@ -1,0 +1,18 @@
+<tbody>
+    {% for event in page_obj %}
+    <tr>
+        <td>{{ event.id }}</td>
+        <td>{{ event.event_date }}</td>
+        <td>{{ event.insurance.insurance_type }} {{ event.insurance.insurance_subject }}</td>
+        <td>{{ event.insurance.insured_person.name }} {{ event.insurance.insured_person.surname }}</td>
+        {% if user.is_superuser %}
+            <td><a href="{% url 'pojistovna:event_detail' event.id %}" class="btn btn-info btn-sm">Detail</a></td>
+        {% endif %}
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="{% if user.is_superuser %}5{% else %}4{% endif %}">Žádná událost není k dispozici.</td>
+    </tr>
+    {% endfor %}
+</tbody>
+

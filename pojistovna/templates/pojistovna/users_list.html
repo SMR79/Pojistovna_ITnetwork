@@ -1,0 +1,99 @@
+{% extends "main.html" %}
+{% block content %}
+
+<div>
+    
+    {% if user.is_superuser or user.is_staff %}    
+        <h3>Seznam uživatelů</h3>
+        {% if page_obj %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Jméno</th>
+                        <th>Příjmení</th>
+                        <th>Email</th>
+                        <th>Akce</th>
+                    </tr>
+                </thead>
+                <tbody id="userTableBody">
+                    {% include "pojistovna/users_list_partial.html" %} 
+                </tbody>
+            </table>
+
+        {% else %}
+            <p>Žádní uživatelé nejsou evidováni.</p>
+        {% endif %}
+        <div id="paginationContainer">
+            {% include "pojistovna/pagination.html" %}
+        </div>        
+    {% else %}
+        <p>Nemohu sdílet další informace.</p>
+    {% endif %}
+    
+</div>
+
+{% endblock %}
+
+{% block sidebar %}
+    <ul>     
+        <li class="dropdown">
+            <a id="dropdownSearch" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-search fs-3"></i>
+            </a>
+            <ul class="dropdown-menu p-3" style="min-width: 250px; left: 0 !important;">
+                <input type="text" class="form-control" id="searchSurname" name="surname" placeholder="Příjmení">
+                <input type="text" class="form-control mb-2" id="searchName" name="name" placeholder="Jméno">                
+            </ul>
+        </li>
+        <li><a href="{% url 'pojistovna:home' %}" class="btn btn-outline-secondary" title="Zpět domů"><i class="bi bi-arrow-left fs-3"></i></a></li>
+    </ul>
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const nameInput = document.getElementById("searchName");
+    const surnameInput = document.getElementById("searchSurname");
+    const tbody = document.getElementById("userTableBody");
+
+    let debounceTimer = null;
+
+    function updateResults(name, surname, page = 1) {
+        const query = `name=${encodeURIComponent(name)}&surname=${encodeURIComponent(surname)}&page=${page}`;
+
+        fetch(`/users/search/?${query}`)
+            .then(response => response.text())
+            .then(html => {
+                tbody.innerHTML = html;
+            });
+    }
+
+    function onInputChange() {
+        const name = nameInput.value.trim();
+        const surname = surnameInput.value.trim();
+
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => updateResults(name, surname), 300);  // debounce 300ms
+    }
+
+    nameInput.addEventListener("input", onInputChange);
+    surnameInput.addEventListener("input", onInputChange);
+
+    // Dynamická paginace se zachováním hodnot vstupů
+    document.addEventListener("click", function (e) {
+        if (e.target.matches(".page-link")) {
+            e.preventDefault();
+
+            const link = new URL(e.target.href, window.location.origin);
+            const page = link.searchParams.get("page") || 1;
+            const name = nameInput.value.trim();
+            const surname = surnameInput.value.trim();
+
+            updateResults(name, surname, page);
+        }
+    });
+});
+</script>
+{% endblock %}

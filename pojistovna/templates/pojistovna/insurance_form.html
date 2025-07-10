@@ -1,0 +1,27 @@
+{% extends "main.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Upravit pojištění</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+    </form>
+</div>
+{% endblock %}
+
+{% block sidebar %}
+<ul>
+    <li>
+        <a href="#" class="btn btn-outline-secondary" onclick="event.preventDefault(); document.querySelector('form').submit();" title="Uložit">
+            <i class="bi bi-save fs-3"></i>
+        </a>
+    </li>
+    <li>
+        <a href="javascript:history.back()" class="btn btn-outline-secondary" title="Zpět">
+            <i class="bi bi-arrow-left fs-3"></i>
+        </a>
+    </li>
+</ul>
+{% endblock %}
