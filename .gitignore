@@ -1,0 +1,19 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+# SQLite databáze
+*.sqlite3
+
+# Virtuální prostředí
+.venv/
+venv/
+env/
+
+# IDE (PyCharm, VSCode)
+.idea/
+.vscode/
+
+# Logy a prostředí
+*.log
+.env
