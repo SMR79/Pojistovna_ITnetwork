@@ -1,0 +1,1 @@
+web: gunicorn pojistovna_ITnetwork.wsgi
