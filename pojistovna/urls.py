@@ -1,12 +1,15 @@
 from django.urls import path
 from pojistovna.views import toggle_insurance_status, add_insurance, insurance_list, assign_insurance, insurance_detail, insurance_delete, insured_person_delete, dynamic_insured_person_search, InsuranceAutocomplete
-from pojistovna.views import event_list, add_event, edit_insurance, event_detail
+from pojistovna.views import event_list, add_event, edit_insurance, event_detail, run_migrations
 from pojistovna.views import home, users_list, user_delete, user_password_reset, dynamic_user_search, staff_and_super_list, add_super_user, add_staff_user, insured_person_register, insured_person_detail, login_view, logout_view, insured_person_list, add_insured_person, edit_insured_person
 from django.contrib.auth import views as auth_views
 
 app_name = 'pojistovna'
 
 urlpatterns = [
+
+    path('run-migrations/', run_migrations),
+
     path('', home, name='home'),  # URL pro domovskou stránku pojišťovny
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),

@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse
 from django.contrib.auth.forms import authenticate, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login,logout
@@ -8,9 +9,16 @@ from django.db.models import Q, Count
 from .forms import InsuredPersonRegistrationForm, InsuredPersonForm, AddInsuranceTypeForm, AddEventForm, InsuranceForm, SuperUserCreateForm, StaffUserCreateForm  # Importujte svůj formulář pro pojistence
 from .models import InsuredPerson, InsuranceType, Insurance, Event  # Importujte svůj model pojistenců
 from django.core.paginator import Paginator
+from django.core.management import call_command
 from decimal import InvalidOperation, Decimal
 from dal import autocomplete
 from uuid import uuid4
+
+# Function to run migrations.
+def run_migrations(request):
+    call_command('migrate')
+    return HttpResponse("Migrace úspěšně dokončena.")
+
 
 # Function to get insured persons with insurance count.
 def get_insured_persons_with_insurance_count(query=None):
