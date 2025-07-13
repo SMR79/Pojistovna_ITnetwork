@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,14 +24,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-dxcs92@&cc4u$9^kkx78v!t+m8wdg(91=r5ri871tw*sd!7a@z'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-import os
 # Set DEBUG based on an environment variable for production readiness
-DEBUG = os.getenv('DEBUG', 'False') == 'True'
+DEBUG = True
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/login/'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.onrender.com']
 
 
 # Application definition
@@ -49,8 +49,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # WhiteNoise for static files
-    'django.middleware.cache.UpdateCacheMiddleware',  # Optional: for caching    
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # WhiteNoise for static files    
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -136,5 +135,4 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Security settings for deployment
-ALLOWED_HOSTS = ['.onrender.com']
+
