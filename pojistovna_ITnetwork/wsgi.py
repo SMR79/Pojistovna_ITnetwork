@@ -15,11 +15,10 @@ from django.core.management import call_command
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'pojistovna_ITnetwork.settings')
 django.setup()
 
+application = get_wsgi_application()
 
+# Automatically run migrations on server start
 try:
     call_command('migrate', interactive=False)
 except Exception as e:
     print(f"Chyba při migraci: {e}")
-    
-
-application = get_wsgi_application()
