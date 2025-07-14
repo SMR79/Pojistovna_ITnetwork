@@ -19,17 +19,7 @@ from django.urls import path, include
 from django.core.management import call_command
 
 
-def trigger_migrations(request):
-    try:
-        call_command('migrate', interactive=False)
-    except Exception as e:
-        from django.http import HttpResponse
-        return HttpResponse(f'Chyba při migraci: {e}')
-    return HttpResponse("Migrace úspěšně dokončeny.")
-
-
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', trigger_migrations),  # dočasná migrační adresa
-    path('app/', include('pojistovna.urls')),  # Include URLs from the pojistovna app
+    path('admin/', admin.site.urls),    
+    path('', include('pojistovna.urls')),  # Include URLs from the pojistovna app
 ]
