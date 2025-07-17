@@ -33,6 +33,65 @@ class InsuredPersonForm(forms.ModelForm):
             'telephone_number': forms.TextInput(attrs={'placeholder': '+420123456789'}),
             'address': forms.TextInput(attrs={'placeholder': 'Ulice, Město, PSČ'}),
         }
+    
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if InsuredPerson.objects.filter(email=email).exists():
+            raise forms.ValidationError("Tento e-mail již evidujeme.")
+        return email
+
+    def clean_birth_certificate_number(self):
+        rc = self.cleaned_data.get('birth_certificate_number')
+
+        if not rc:
+            raise forms.ValidationError("Rodné číslo je povinné.")  # pokud má být povinné
+
+        if not rc.isdigit():
+            raise forms.ValidationError("Rodné číslo musí obsahovat pouze číslice.")
+        if len(rc) not in [9, 10]:
+            raise forms.ValidationError("Rodné číslo musí mít 9 nebo 10 číslic.")
+        return rc
+
+    def clean_name(self):
+        name = self.cleaned_data.get('name')
+        if name and not name.replace(" ", "").isalpha():
+            raise forms.ValidationError("Jméno smí obsahovat pouze písmena a mezery.")
+        return name
+
+    def clean_surname(self):
+        surname = self.cleaned_data.get('surname')
+        if surname and not surname.replace(" ", "").isalpha():
+            raise forms.ValidationError("Příjmení smí obsahovat pouze písmena a mezery.")
+        return surname
+
+    def clean_telephone_number(self):
+        import re
+        tel = self.cleaned_data.get('telephone_number')
+        if tel and not re.match(r'^\+420\d{9}$', tel):
+            raise forms.ValidationError("Telefonní číslo musí být ve formátu +420XXXXXXXXX.")
+        return tel
+
+    def clean_company_registration_number(self):
+        ico = self.cleaned_data.get('company_registration_number')
+        if ico and (not ico.isdigit() or len(ico) != 8):
+            raise forms.ValidationError("IČO musí mít přesně 8 číslic.")
+        return ico
+
+    def clean(self):
+        cleaned_data = super().clean()
+        name = cleaned_data.get('name')
+        surname = cleaned_data.get('surname')
+        date_of_birth = cleaned_data.get('date_of_birth')
+
+        if name and surname and date_of_birth:
+            if InsuredPerson.objects.filter(
+                name=name,
+                surname=surname,
+                date_of_birth=date_of_birth
+            ).exists():
+                raise forms.ValidationError("Pojištěnec se stejným jménem, příjmením a datem narození již existuje.")
+
+        return cleaned_data
 
 
 class InsuredPersonRegistrationForm(UserCreationForm):

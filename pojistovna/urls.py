@@ -8,8 +8,7 @@ app_name = 'pojistovna'
 
 urlpatterns = [
 
-    path('run-migrations/', run_migrations),
-
+    
     path('', home, name='home'),  # URL pro domovskou stránku pojišťovny
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),

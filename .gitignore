@@ -3,7 +3,7 @@ __pycache__/
 *.py[cod]
 
 # SQLite databáze
-# *.sqlite3
+*.sqlite3
 
 # Virtuální prostředí
 .venv/

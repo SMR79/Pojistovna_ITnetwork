@@ -5,7 +5,28 @@
 
     <form id="formular-registrace" method="POST">
         {% csrf_token %}
-        {{ form.as_p }}
+
+        <!-- Showing failures which are not concerning to certain field -->
+        {% if form.non_field_errors %}
+            <div style="color: red;">
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% for field in form %}
+            <div style="margin-bottom: 10px;">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.help_text %}
+                    <small>{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                    <div style="color: red;">{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endfor %}
         
         {% if form.instance.id %}
             <input type="hidden" name="id" value="{{ form.instance.id }}">
