@@ -19,5 +19,7 @@ Přihlašovací údaje:
 - **Password:** kolovalec
 
 ---
+deploy na render:
+https://pojistovna-itnetwork.onrender.com/
 
 Děkuji za pozornost! ;)
